@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  flask:
+    extends:
+      file: docker-compose.base.yml
+      service: flask
+  nginx:
+    extends:
+      file: docker-compose.base.yml
+      service: nginx
+    depends_on:
+      - flask

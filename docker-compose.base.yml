@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  flask:
+    build: .
+    image: flaskapp
+    environment:
+      VIRTUAL_HOST: flaskapp.localhost
+  nginx:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro

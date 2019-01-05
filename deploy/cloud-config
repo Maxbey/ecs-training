@@ -1,0 +1,7 @@
+#cloud-config
+repo_update: true
+repo_upgrade: all
+
+runcmd:
+ - grep -Fxq 'ECS_ENABLE_CONTAINER_METADATA=true' /etc/ecs/ecs.config || echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
+ - grep -Fxq 'ECS_ENABLE_TASK_CPU_MEM_LIMIT=false' /etc/ecs/ecs.config || echo 'ECS_ENABLE_TASK_CPU_MEM_LIMIT=false' >> /etc/ecs/ecs.config
