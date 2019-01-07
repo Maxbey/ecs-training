@@ -34,11 +34,12 @@ Push Image to ECR repository:
 - Deploy application via `$ make ecs-ec2-deploy`
 
 ## ECS Fargate launch type
+- Create IAM-ECS trusted role with `AmazonECSTaskExecutionRolePolicy ` permission
 - Create `CloudWatch` logs group 
 `$ aws logs create-log-group --log-group-name ECSTrainingFargate`
 - Create `CloudFormation` stack via `$ make ecs-fg-cluster`. Command output should contain identifiers of created VPC and subnets
 - Get default SG id `$ aws ec2 describe-security-groups --filter Name=vpc-id,Values=<vpc_id>`
-- Update `deploy/fargate/ecs-params.yml` according to your identifiers
+- `$ export AWS_VPC_SUBNET=<subnet_id> AWS_FG_EXEC_ROLE=<role_arn> AWS_VPC_SG=<sg_id>`
 - Open `8000` port in default VPC SG via `$ aws ec2 authorize-security-group-ingress --group-id <sg-id> --protocol tcp --port 8000 --cidr 0.0.0.0/0`
 - Create ECS Service `$ make ecs-fg-service`
 - Deploy application via `$ make ecs-fg-deploy`
