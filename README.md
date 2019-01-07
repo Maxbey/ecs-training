@@ -34,7 +34,7 @@ Push Image to ECR repository:
 - Deploy application via `$ make ecs-ec2-deploy`
 
 ## ECS Fargate launch type
-- Create IAM-ECS trusted role with `AmazonECSTaskExecutionRolePolicy` permission
+- Create IAM ECS-trusted role with `AmazonECSTaskExecutionRolePolicy` permission
 - Create `CloudWatch` logs group 
 `$ aws logs create-log-group --log-group-name ECSTrainingFargate`
 - Create `CloudFormation` stack via `$ make ecs-fg-cluster`. Command output should contain identifiers of created VPC and subnets
