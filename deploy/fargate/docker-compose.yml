@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  flask:
+    image: ${AWS_ECR_PRODUCTION}
+    ports:
+      - 8000:8000
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ECSTrainingFargate
+        awslogs-region: ${AWS_ECS_CLUSTER_REGION}
+        awslogs-stream-prefix: flask

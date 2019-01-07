@@ -1,4 +1,7 @@
-ECS_COMPOSE = compose -f deploy/compose.yml --ecs-params deploy/ecs-params.yml \
+EC2_COMPOSE = compose -f deploy/ec2/docker-compose.yml --ecs-params deploy/ec2/ecs-params.yml \
+	--region ${AWS_ECS_CLUSTER_REGION} --cluster AWSTrainingCluster --verbose
+
+FARGATE_COMPOSE = compose -f deploy/fargate/docker-compose.yml --ecs-params deploy/fargate/ecs-params.yml \
 	--region ${AWS_ECS_CLUSTER_REGION} --cluster AWSTrainingCluster --verbose
 
 localserver:
@@ -7,18 +10,25 @@ localserver:
 ecs-ec2-cluster:
 	ecs-cli up --verbose --launch-type EC2 --keypair ${AWS_EC2_KEYPAIR} \
 	--instance-type t2.micro --region ${AWS_ECS_CLUSTER_REGION} --cluster AWSTrainingCluster \
-	--extra-user-data ./deploy/cloud-config --instance-role aws-elasticbeanstalk-ec2-role
+	--extra-user-data ./deploy/ec2/cloud-config --instance-role aws-elasticbeanstalk-ec2-role
 
 ecs-fg-cluster:
 	ecs-cli up --launch-type FARGATE --verbose --region ${AWS_ECS_CLUSTER_REGION} \
-	--cluster AWSTrainingCluster --extra-user-data ./deploy/cloud-config
+	--cluster AWSTrainingCluster
 
-ecs-create-service:
-	ecs-cli $(ECS_COMPOSE) service create
+ecs-ec2-service:
+	ecs-cli $(EC2_COMPOSE) service create
 
-ecs-deploy:
-	ecs-cli $(ECS_COMPOSE) service stop
-	ecs-cli $(ECS_COMPOSE) service start
+ecs-fg-service:
+	ecs-cli $(FARGATE_COMPOSE) service create --launch-type FARGATE
+
+ecs-ec2-deploy:
+	ecs-cli $(EC2_COMPOSE) service stop
+	ecs-cli $(EC2_COMPOSE) service start
+
+ecs-fg-deploy:
+	ecs-cli $(FARGATE_COMPOSE) service stop
+	ecs-cli $(FARGATE_COMPOSE) service start
 
 ecr-push:
 	docker tag flaskapp:latest ${AWS_ECR_PRODUCTION}

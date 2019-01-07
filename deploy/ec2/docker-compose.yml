@@ -1,0 +1,22 @@
+version: '2'
+services:
+  nginx:
+    extends:
+      file: ../../docker-compose.base.yml
+      service: nginx
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ECSTrainingEC2
+        awslogs-region: ${AWS_ECS_CLUSTER_REGION}
+        awslogs-stream-prefix: nginx
+  flask:
+    image: ${AWS_ECR_PRODUCTION}
+    environment:
+      VIRTUAL_HOST: ${APP_HOSTNAME}
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: ECSTrainingEC2
+        awslogs-region: ${AWS_ECS_CLUSTER_REGION}
+        awslogs-stream-prefix: flask
